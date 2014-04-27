@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "FreeImage.h"
 
 #define NEEDED_ARGS 3
@@ -16,6 +17,7 @@
    * @author Steve Choo
 */
 int main(int argc, char *argv[]) {
+   bool test = true;
    /* skipping robust checking because 2 args */
    if(argc != NEEDED_ARGS) {
       fprintf(stderr, "Use: ./spritepacker inputFolder outputName\n");
