@@ -44,12 +44,14 @@ int main(int argc, char *argv[]) {
    return 0;
 }
 
-void calc_optimal_width_and_height(char* dirName, double* minWidth, double* minHeight) {
+void calc_optimal_width_and_height(char* dirName, double* optimalWidth, double* optimalHeight) {
    /* Enough to hold 256 chars which should be way more than enough */
    char fullPath[FULLPATH];
    DIR* currDir;
    struct dirent* currEntry;
    FREE_IMAGE_FORMAT imgType = FIF_UNKNOWN;
+   FIBITMAP* bitmap;
+   unsigned minWidth = 0.0, minHeight = 0.0;
 
    /* we open dir */
    if((currDir = opendir(dirName)) == NULL) {
@@ -74,5 +76,14 @@ void calc_optimal_width_and_height(char* dirName, double* minWidth, double* minH
          imgType = FreeImage_GetFIFFromFilename(fullPath);
       }
 
+      /* load image */
+      bitmap = FreeImage_Load(imgType, fullPath, 0);
+
+      /* get width and height in pixels */
+      minWidth += FreeImage_GetWidth(bitmap);
+      minHeight += FreeImage_GetHeight(bitmap);
    }
+
+   *optimalWidth = fmax(sqrt(minWidth * minHeight), minWidth);
+   /* wtf to do with optimalHeight? */
 }

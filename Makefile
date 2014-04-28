@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c99
-LFLAGS = -lfreeimage
+LFLAGS = -lfreeimage -lm
 
 all: spacker
 
