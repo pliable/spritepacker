@@ -14,7 +14,7 @@
 #define FULLPATH 256
 #define NEEDED_ARGS 3
 
-void calc_optimal_width_and_height(char* dirName, double* minWidth, double* minHeight);
+void calc_optimal_width_and_height(char* dirName, unsigned* minWidth, unsigned* minHeight);
 /*
  * Sprite packer
  * -------------
@@ -27,7 +27,7 @@ void calc_optimal_width_and_height(char* dirName, double* minWidth, double* minH
  * @author Steve Choo
  */
 int main(int argc, char *argv[]) {
-   double optimalWidth, optimalHeight;
+   unsigned optimalWidth, optimalHeight;
 
    /* needs to be called at beginning */
    FreeImage_Initialise(false);
@@ -44,14 +44,14 @@ int main(int argc, char *argv[]) {
    return 0;
 }
 
-void calc_optimal_width_and_height(char* dirName, double* optimalWidth, double* optimalHeight) {
+void calc_optimal_width_and_height(char* dirName, unsigned* optimalWidth, unsigned* optimalHeight) {
    /* Enough to hold 256 chars which should be way more than enough */
    char fullPath[FULLPATH];
    DIR* currDir;
    struct dirent* currEntry;
    FREE_IMAGE_FORMAT imgType = FIF_UNKNOWN;
    FIBITMAP* bitmap;
-   unsigned minWidth = 0.0, minHeight = 0.0;
+   unsigned minWidth = 0, minHeight = 0, optimalArea = 0, width, height;
 
    /* we open dir */
    if((currDir = opendir(dirName)) == NULL) {
@@ -80,10 +80,14 @@ void calc_optimal_width_and_height(char* dirName, double* optimalWidth, double* 
       bitmap = FreeImage_Load(imgType, fullPath, 0);
 
       /* get width and height in pixels */
-      minWidth += FreeImage_GetWidth(bitmap);
-      minHeight += FreeImage_GetHeight(bitmap);
+      width = FreeImage_GetWidth(bitmap);
+      height = FreeImage_GetHeight(bitmap);
+
+      minWidth = fmax(minWidth, width);
+      minHeight = fmax(minWidth, height);
+      optimalArea += width * height;
    }
 
-   *optimalWidth = fmax(sqrt(minWidth * minHeight), minWidth);
-   /* wtf to do with optimalHeight? */
+   *optimalWidth = fmax(minWidth, (unsigned)sqrt(optimalArea) + 0.5);
+   *optimalHeight = fmax(minHeight, optimalArea / *optimalWidth);
 }
