@@ -6,16 +6,10 @@
 #include <math.h>
 #include <dirent.h>
 #include "FreeImage.h"
-
-/* #defines to remove magic numbers
-   since we all hate that
-   */
-#define DIRECTORY 1
-#define FULLPATH 256
-#define NEEDED_ARGS 3
+#include "helper.h"
+#include "magic.h"
 
 void calc_optimal_width_and_height(char* dirName, unsigned* minWidth, unsigned* minHeight);
-unsigned umax(unsigned l, unsigned r);
 /*
  * Sprite packer
  * -------------
@@ -106,8 +100,4 @@ void calc_optimal_width_and_height(char* dirName, unsigned* optimalWidth, unsign
 
    (*optimalWidth) = umax(minWidth, (unsigned)(sqrt(optimalArea) + 0.5));
    (*optimalHeight) = umax(minHeight, (optimalArea / (*optimalWidth)));
-}
-
-unsigned umax(unsigned l, unsigned r) {
-   return l < r ? r : l;
 }
