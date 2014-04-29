@@ -86,6 +86,9 @@ void calc_optimal_width_and_height(char* dirName, unsigned* optimalWidth, unsign
       minWidth = fmax(minWidth, width);
       minHeight = fmax(minWidth, height);
       optimalArea += width * height;
+
+      /* unload image - don't want memory leaks! */
+      FreeImage_Unload(bitmap);
    }
 
    *optimalWidth = fmax(minWidth, (unsigned)sqrt(optimalArea) + 0.5);
