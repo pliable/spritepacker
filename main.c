@@ -39,6 +39,8 @@ int main(int argc, char *argv[]) {
    }
 
    calc_optimal_width_and_height(argv[DIRECTORY], &optimalWidth, &optimalHeight);
+   printf("optimalWidth: %u\n", optimalWidth);
+   printf("optimalHeight: %u\n", optimalHeight);
 
    FreeImage_DeInitialise();
    return 0;
@@ -46,11 +48,11 @@ int main(int argc, char *argv[]) {
 
 void calc_optimal_width_and_height(char* dirName, unsigned* optimalWidth, unsigned* optimalHeight) {
    /* Enough to hold 256 chars which should be way more than enough */
-   char fullPath[FULLPATH];
+   char fullPath[FULLPATH] = {'\0'};
    DIR* currDir;
    struct dirent* currEntry;
    FREE_IMAGE_FORMAT imgType = FIF_UNKNOWN;
-   FIBITMAP* bitmap;
+   FIBITMAP* bitmap = NULL;
    unsigned minWidth = 0, minHeight = 0, optimalArea = 0, width, height;
 
    /* we open dir */
@@ -66,18 +68,25 @@ void calc_optimal_width_and_height(char* dirName, unsigned* optimalWidth, unsign
          continue;
       }
 
-      /* grab file name and get file type */
-      /* This is dumb and there is probably and easier way to pass the full
-         path but I'm brain dead right now */
+      /* grab file name and get file type, exit if path is stupidly long */
+      if(!(strlen(dirName) + strlen(currEntry->d_name) < FULLPATH)) {
+         fprintf(stderr, "Path: %s%s too long, exiting...\n", dirName, currEntry->d_name);
+         exit(EXIT_FAILURE);
+      }
+
       strcat(fullPath, dirName);
       strcat(fullPath, currEntry->d_name);
+
       imgType = FreeImage_GetFileType(fullPath, 0);
       if(imgType == FIF_UNKNOWN) {
          imgType = FreeImage_GetFIFFromFilename(fullPath);
       }
 
       /* load image */
-      bitmap = FreeImage_Load(imgType, fullPath, 0);
+      if( !(bitmap = FreeImage_Load(imgType, fullPath, 0)) ) {
+         fprintf(stderr, "Image failed to load, exiting...\n");
+         exit(EXIT_FAILURE);
+      }
 
       /* get width and height in pixels */
       width = FreeImage_GetWidth(bitmap);
@@ -89,8 +98,11 @@ void calc_optimal_width_and_height(char* dirName, unsigned* optimalWidth, unsign
 
       /* unload image - don't want memory leaks! */
       FreeImage_Unload(bitmap);
+      
+      /* clearing buffer */
+      fullPath[0] = '\0';
    }
 
-   *optimalWidth = fmax(minWidth, (unsigned)sqrt(optimalArea) + 0.5);
-   *optimalHeight = fmax(minHeight, optimalArea / *optimalWidth);
+   (*optimalWidth) = (unsigned)fmax(minWidth, (sqrt(optimalArea) + 0.5));
+   (*optimalHeight) = (unsigned)fmax(minHeight, optimalArea / (*optimalWidth));
 }
