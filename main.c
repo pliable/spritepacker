@@ -15,6 +15,7 @@
 #define NEEDED_ARGS 3
 
 void calc_optimal_width_and_height(char* dirName, unsigned* minWidth, unsigned* minHeight);
+unsigned umax(unsigned l, unsigned r);
 /*
  * Sprite packer
  * -------------
@@ -92,8 +93,8 @@ void calc_optimal_width_and_height(char* dirName, unsigned* optimalWidth, unsign
       width = FreeImage_GetWidth(bitmap);
       height = FreeImage_GetHeight(bitmap);
 
-      minWidth = fmax(minWidth, width);
-      minHeight = fmax(minWidth, height);
+      minWidth = umax(minWidth, width);
+      minHeight = umax(minHeight, height);
       optimalArea += width * height;
 
       /* unload image - don't want memory leaks! */
@@ -103,6 +104,10 @@ void calc_optimal_width_and_height(char* dirName, unsigned* optimalWidth, unsign
       fullPath[0] = '\0';
    }
 
-   (*optimalWidth) = (unsigned)fmax(minWidth, (sqrt(optimalArea) + 0.5));
-   (*optimalHeight) = (unsigned)fmax(minHeight, optimalArea / (*optimalWidth));
+   (*optimalWidth) = umax(minWidth, (unsigned)(sqrt(optimalArea) + 0.5));
+   (*optimalHeight) = umax(minHeight, (optimalArea / (*optimalWidth)));
+}
+
+unsigned umax(unsigned l, unsigned r) {
+   return l < r ? r : l;
 }
