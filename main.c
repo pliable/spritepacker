@@ -100,4 +100,9 @@ void calc_optimal_width_and_height(char* dirName, unsigned* optimalWidth, unsign
 
    (*optimalWidth) = umax(minWidth, (unsigned)(sqrt(optimalArea) + 0.5));
    (*optimalHeight) = umax(minHeight, (optimalArea / (*optimalWidth)));
+
+   if(closedir(currDir) < 0) {
+      perror("closedir");
+      exit(EXIT_FAILURE);
+   }
 }
