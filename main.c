@@ -36,7 +36,6 @@
 #include "helper.h"
 #include "magic.h"
 
-void calc_optimal_width_and_height(char* dirName, unsigned* minWidth, unsigned* minHeight);
 int main(int argc, char *argv[]) {
    unsigned optimalWidth, optimalHeight;
    int numFiles = 0;
@@ -54,8 +53,9 @@ int main(int argc, char *argv[]) {
    numFiles = count_files(argv[DIRECTORY]);
    populate_bmp_info(&bmps, argv[DIRECTORY], numFiles);
 
-   /*calc_optimal_width_and_height(argv[DIRECTORY], &optimalWidth, &optimalHeight);
-   */
+   calc_optimal_width_and_height(bmps, numFiles, &optimalWidth, &optimalHeight);
+   printf("optimalWidth: %u\n", optimalWidth);
+   printf("optimalHeight: %u\n", optimalHeight);
 
    FreeImage_DeInitialise();
    return 0;
