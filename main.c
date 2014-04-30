@@ -54,9 +54,12 @@ int main(int argc, char *argv[]) {
       */
    numFiles = count_files(argv[DIRECTORY]);
    populate_bmp_info(&bmps, argv[DIRECTORY], numFiles);
+
+   /*sort it. s-sort it reaaaaaal good */
+   qsort(bmps, numFiles, sizeof(bmp_info), comp);
    calc_optimal_width_and_height(bmps, numFiles, &optimalWidth, &optimalHeight);
-   printf("optimalWidth: %u\n", optimalWidth);
-   printf("optimalHeight: %u\n", optimalHeight);
+
+   /* now we've got optimalW/H and sorted so hooray */
 
    FreeImage_DeInitialise();
    return 0;

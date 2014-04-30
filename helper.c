@@ -156,7 +156,8 @@ unsigned umax(unsigned l, unsigned r) {
    return l < r ? r : l;
 }
 
-/* comparator function for qsort() */
+/* comparator function for qsort(), used to sort in
+   **descending** order*/
 int comp(const void *p1, const void *p2) {
-   return (((bmp_info*)p1)->height) - (((bmp_info*)p2)->height);
+   return (((bmp_info*)p2)->height) - (((bmp_info*)p1)->height);
 }
