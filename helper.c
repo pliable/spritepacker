@@ -26,7 +26,6 @@
 #include "FreeImage.h"
 #include "helper.h"
 
-/*this is going to be completely rewritten */
 void calc_optimal_width_and_height(bmp_info* bmps, int numFiles, unsigned* optimalWidth, unsigned* optimalHeight) {
    unsigned minWidth = 0, minHeight = 0, optimalArea = 0;
    int i;
