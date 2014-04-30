@@ -41,6 +41,9 @@ void calc_optimal_width_and_height(bmp_info* bmps, int numFiles, unsigned* optim
 }
 
 /* modified from here: http://stackoverflow.com/questions/1121383/counting-the-number-of-files-in-a-directory-using-c */
+/* count_files will be used to make an array of bmp_infos,
+   which will contain various info about each bmp in the folder
+   */
 int count_files(char* dirName) {
    int fileCount = 0;
    DIR *currDir;
@@ -155,5 +158,5 @@ unsigned umax(unsigned l, unsigned r) {
 
 /* comparator function for qsort() */
 int comp(const void *p1, const void *p2) {
-   return *((int*)p1) - *((int*)p2);
+   return (((bmp_info*)p1)->height) - (((bmp_info*)p2)->height);
 }

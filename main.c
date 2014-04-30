@@ -15,9 +15,8 @@
     You should have received a copy of the GNU General Public License along
     with this program; if not, write to the Free Software Foundation, Inc.,
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-*/
 
-/*
+ --------------------------------------------------------------------------
  * Sprite packer
  * -------------
  * This program is based on an algorithm found at:
@@ -50,9 +49,11 @@ int main(int argc, char *argv[]) {
       exit(EXIT_FAILURE);
    }
 
+   /* count_files will be used to make an array of bmp_infos,
+      which will contain various info about each bmp in the folder
+      */
    numFiles = count_files(argv[DIRECTORY]);
    populate_bmp_info(&bmps, argv[DIRECTORY], numFiles);
-
    calc_optimal_width_and_height(bmps, numFiles, &optimalWidth, &optimalHeight);
    printf("optimalWidth: %u\n", optimalWidth);
    printf("optimalHeight: %u\n", optimalHeight);
