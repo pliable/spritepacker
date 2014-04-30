@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -g -Wall -Wextra -std=c99
+CFLAGS = -g -Wall -Wextra -std=c99 -D _BSD_SOURCE
 LFLAGS = -lfreeimage -lm
 
 all: spacker
