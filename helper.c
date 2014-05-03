@@ -26,6 +26,53 @@
 #include "FreeImage.h"
 #include "helper.h"
 
+/* this function is just playing around with FreeImage to see how to even
+   output an image with combined sprites */
+void make_horizontal_sprite(FIBITMAP** canvas, bmp_info* bmps, int numBmps) {
+   int i;
+   unsigned widthSoFar = 0;
+   FIBITMAP* c;
+
+   /* allocate canvas */
+   *canvas = FreeImage_Allocate(total_width(bmps, numBmps), max_height(bmps, numBmps), 32, 0, 0, 0);
+
+   if(!(*canvas)) {
+      fprintf(stderr, "FreeImage_Allocate fail, exiting...\n");
+      exit(EXIT_FAILURE);
+   }
+
+   c = *canvas;
+
+   for(i = 0; i < numBmps; i++) {
+
+
+   }
+}
+
+unsigned total_width(bmp_info* bmps, int numBmps) {
+   int i;
+   unsigned totalWidth = 0;
+
+   for(i = 0; i < numBmps; i++) {
+      totalWidth += bmps[i].width;
+   }
+
+   return totalWidth;
+}
+
+unsigned max_height(bmp_info* bmps, int numBmps) {
+   int i;
+   unsigned maxSoFar = 0;
+
+   for(i = 0; i < numBmps; i++) {
+      if(maxSoFar < bmps[i].height) {
+         maxSoFar = bmps[i].height;
+      }
+   }
+
+   return maxSoFar;
+}
+
 void calc_optimal_width_and_height(bmp_info* bmps, int numFiles, unsigned* optimalWidth, unsigned* optimalHeight) {
    unsigned minWidth = 0, minHeight = 0, optimalArea = 0;
    int i;
@@ -75,7 +122,7 @@ int count_files(char* dirName) {
    feel like writing my own dynamic array, since I just
    want to just finish the damn packer. This populates a
    bmp_info array with filename, width, and height */
-void populate_bmp_info(bmp_info** out_bmps, char* dirName, int file_count) {
+void populate_bmp_info(bmp_info** outBmps, char* dirName, int fileCount) {
    char fullPath[FULLPATH] = {'\0'};
    DIR* currDir;
    struct dirent* currEntry;
@@ -85,9 +132,9 @@ void populate_bmp_info(bmp_info** out_bmps, char* dirName, int file_count) {
    bmp_info* bmps;
 
    /* mallocing bmps array */
-   *out_bmps = (bmp_info*)malloc(file_count * sizeof(bmp_info));
+   *outBmps = (bmp_info*)malloc(fileCount * sizeof(bmp_info));
 
-   if(*out_bmps == NULL) {
+   if(*outBmps == NULL) {
       fprintf(stderr, "malloc fail, exiting...\n");
       exit(EXIT_FAILURE);
    }
@@ -95,7 +142,7 @@ void populate_bmp_info(bmp_info** out_bmps, char* dirName, int file_count) {
    /* according to a buddy, the cheating cheaters way of using
       a double pointer :P
    */
-   bmps = *out_bmps;
+   bmps = *outBmps;
 
    /* we open dir */
    if((currDir = opendir(dirName)) == NULL) {
@@ -126,6 +173,7 @@ void populate_bmp_info(bmp_info** out_bmps, char* dirName, int file_count) {
       imgType = FreeImage_GetFileType(fullPath, 0);
       if(imgType == FIF_UNKNOWN) {
          imgType = FreeImage_GetFIFFromFilename(fullPath);
+         bmps[currBMPIdx].imgType = imgType;
       }
 
       /* load image */
