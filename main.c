@@ -39,6 +39,7 @@ int main(int argc, char *argv[]) {
    unsigned optimalWidth, optimalHeight;
    int numFiles = 0;
    bmp_info* bmps;
+   FIBITMAP* canvas;
 
    /* needs to be called at beginning */
    FreeImage_Initialise(false);
@@ -57,7 +58,8 @@ int main(int argc, char *argv[]) {
 
    /*sort it. s-sort it reaaaaaal good */
    qsort(bmps, numFiles, sizeof(bmp_info), comp);
-   calc_optimal_width_and_height(bmps, numFiles, &optimalWidth, &optimalHeight);
+   /*calc_optimal_width_and_height(bmps, numFiles, &optimalWidth, &optimalHeight);*/
+   make_horizontal_sprite(&canvas, bmps, numFiles, argv[OUTPUTFILE]);
 
    /* now we've got optimalW/H and sorted so hooray */
 

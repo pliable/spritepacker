@@ -28,10 +28,10 @@
 
 /* this function is just playing around with FreeImage to see how to even
    output an image with combined sprites */
-void make_horizontal_sprite(FIBITMAP** canvas, bmp_info* bmps, int numBmps) {
+void make_horizontal_sprite(FIBITMAP** canvas, bmp_info* bmps, int numBmps, char *outputName) {
    int i;
    unsigned widthSoFar = 0;
-   FIBITMAP* c;
+   FIBITMAP* c = NULL, *bitmap = NULL;
 
    /* allocate canvas */
    *canvas = FreeImage_Allocate(total_width(bmps, numBmps), max_height(bmps, numBmps), 32, 0, 0, 0);
@@ -44,9 +44,34 @@ void make_horizontal_sprite(FIBITMAP** canvas, bmp_info* bmps, int numBmps) {
    c = *canvas;
 
    for(i = 0; i < numBmps; i++) {
+      /* load image */
+      printf("imgType: %d\n", bmps[i].type);
+      printf("filename: %s\n", bmps[i].filename);
+      printf("height: %u\n", bmps[i].height);
+      printf("width: %u\n", bmps[i].width);
+      if( !(bitmap = FreeImage_Load(bmps[i].type, bmps[i].filename, 0)) ) {
+         fprintf(stderr, "Image failed to load, exiting(1)...\n");
+         exit(EXIT_FAILURE);
+      }
 
+      /* paste image on canvas */
+      if( !FreeImage_Paste(c, bitmap, widthSoFar, 0, /*it's over*/ 9000)) {
+         fprintf(stderr, "Image failed to paste, exiting...\n");
+         exit(EXIT_FAILURE);
+      }
 
+      /* unload image */
+      FreeImage_Unload(bitmap);
+      /* track where we are */
+      widthSoFar += bmps[i].width;
    }
+
+   if( !FreeImage_Save(FIF_BMP, c, outputName, 0) ) {
+      fprintf(stderr, "Image failed to save, exiting...\n");
+      exit(EXIT_FAILURE);
+   }
+
+   /* freeimage unload for canvas? */
 }
 
 unsigned total_width(bmp_info* bmps, int numBmps) {
@@ -173,12 +198,13 @@ void populate_bmp_info(bmp_info** outBmps, char* dirName, int fileCount) {
       imgType = FreeImage_GetFileType(fullPath, 0);
       if(imgType == FIF_UNKNOWN) {
          imgType = FreeImage_GetFIFFromFilename(fullPath);
-         bmps[currBMPIdx].imgType = imgType;
       }
+
+      bmps[currBMPIdx].type = imgType;
 
       /* load image */
       if( !(bitmap = FreeImage_Load(imgType, fullPath, 0)) ) {
-         fprintf(stderr, "Image failed to load, exiting...\n");
+         fprintf(stderr, "Image failed to load, exiting(2)...\n");
          exit(EXIT_FAILURE);
       }
 
