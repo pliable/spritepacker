@@ -45,12 +45,8 @@ void make_horizontal_sprite(FIBITMAP** canvas, bmp_info* bmps, int numBmps, char
 
    for(i = 0; i < numBmps; i++) {
       /* load image */
-      printf("imgType: %d\n", bmps[i].type);
-      printf("filename: %s\n", bmps[i].filename);
-      printf("height: %u\n", bmps[i].height);
-      printf("width: %u\n", bmps[i].width);
       if( !(bitmap = FreeImage_Load(bmps[i].type, bmps[i].filename, 0)) ) {
-         fprintf(stderr, "Image failed to load, exiting(1)...\n");
+         fprintf(stderr, "Image failed to load, exiting...\n");
          exit(EXIT_FAILURE);
       }
 
@@ -204,7 +200,7 @@ void populate_bmp_info(bmp_info** outBmps, char* dirName, int fileCount) {
 
       /* load image */
       if( !(bitmap = FreeImage_Load(imgType, fullPath, 0)) ) {
-         fprintf(stderr, "Image failed to load, exiting(2)...\n");
+         fprintf(stderr, "Image failed to load, exiting...\n");
          exit(EXIT_FAILURE);
       }
 
