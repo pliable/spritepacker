@@ -10,4 +10,4 @@ This uses the FreeImage library, found here: http://freeimage.sourceforge.net/
 5/3/14: Actually usable to an extent; will pack images in one big horizontal row. Next step is implementing algorithm
         using FreeImage
 
-Usage: ./spacker <image_directory> <output_name>.bmp
+Usage: ./spacker [image_directory] [output_name].bmp
