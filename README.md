@@ -11,3 +11,5 @@ This uses the FreeImage library, found here: http://freeimage.sourceforge.net/
         using FreeImage
 
 Usage: ./spacker [image_directory] [output_name].bmp
+
+This is going to remain how it is. There are too many underlying implementation issues that would be much easier dealt with with a higher level language like Java. Gonna start rewrite in Java ASAP....
