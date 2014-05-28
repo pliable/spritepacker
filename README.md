@@ -27,3 +27,5 @@ Clarified algorithm courtesy of John:
     you add a new row with the height of the next image
     and repeat
 6. until everything is in the image
+
+5/27/14: actually upon further inspection, the version my buddy mentioned is more of a modified version of the French packer. I still don't understand the French packer though cause I'm too dumb to understand the guys English
