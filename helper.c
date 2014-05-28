@@ -28,7 +28,95 @@
 
 /* this function is just playing around with FreeImage to see how to even
    output an image with combined sprites */
-void make_horizontal_sprite(FIBITMAP** canvas, bmp_info* bmps, int numBmps, char *outputName) {
+
+/* Do i really need to pass in FIBITMAP** canvas? I'm not even using it in main so wtf am i doing */
+
+/* bug: height for canvas is way too huge for all images, need to fix */
+void make_packed_sprite(FIBITMAP** canvas, bmp_info* bmps, int numBmps, unsigned width, unsigned height, char* outputName) {
+   int i;
+   unsigned widthSoFar = 0, heightSoFar = 0, currentRowHeight = 0;
+   FIBITMAP* c = NULL, *bitmap = NULL, *newCanvas = NULL, *temp = NULL;
+
+   /* allocate canvas */
+   *canvas = FreeImage_Allocate(width, height, 32, 0, 0, 0);
+
+   if(!(*canvas)) {
+      fprintf(stderr, "FreeImage_Allocate fail, exiting...\n");
+      exit(EXIT_FAILURE);
+   }
+
+   /* for easier referencing down the line */
+   c = *canvas;
+
+   for(i = 0; i < numBmps; i++) {
+      /* this is dirty and I don't like it but eh */
+      if(i == 0) {
+         currentRowHeight = bmps[i].height;
+      }
+
+      /* if width of current image goes over width, start new row */
+      if( (widthSoFar + bmps[i].width) > width) {
+         /* calculate new height for further pastes */
+         heightSoFar += currentRowHeight;
+
+         /* get new row height */
+         currentRowHeight = bmps[i].height;
+
+         /* if new image goes over height, copy old canvas, paste on allocated new one */
+         if(heightSoFar + currentRowHeight > height) {
+            /* grab current canvas */
+            temp = FreeImage_Copy(c, 0, 0, width, height);
+            /* overwrite new height */
+            height = heightSoFar + height;
+            /* allocate new canvas */
+            newCanvas = FreeImage_Allocate(width, height, 32, 0, 0, 0);
+         
+            /* paste old canvas on top of new */
+            if(!FreeImage_Paste(newCanvas, temp, 0, 0, 9000)) {
+               fprintf(stderr, "(1)Image failed to paste, exiting...\n");
+               exit(EXIT_FAILURE);
+            }
+
+            /* free old canvas */
+            FreeImage_Unload(c);
+
+            /* update them pointers */
+            c = newCanvas;
+         }
+
+         /* reset width to 0 */
+         widthSoFar = 0;
+      }
+
+      /* load image */
+      if( !(bitmap = FreeImage_Load(bmps[i].type, bmps[i].filename, 0)) ) {
+         fprintf(stderr, "Image failed to load, exiting...\n");
+         exit(EXIT_FAILURE);
+      }
+      
+      /* paste image on canvas */
+      if( !FreeImage_Paste(c, bitmap, widthSoFar, heightSoFar, /*it's over*/ 9000)) {
+         fprintf(stderr, "(2)Image failed to paste, exiting...\n");
+         exit(EXIT_FAILURE);
+      }
+
+      /* unload image */
+      FreeImage_Unload(bitmap);
+      /* track where we are */
+      widthSoFar += bmps[i].width;
+   }
+
+   if( !FreeImage_Save(FIF_BMP, c, outputName, 0) ) {
+      fprintf(stderr, "Image failed to save, exiting...\n");
+      exit(EXIT_FAILURE);
+   }
+
+   /* freeimage unload for canvas? */
+
+
+}
+
+void make_horizontal_sprite(FIBITMAP** canvas, bmp_info* bmps, int numBmps, char* outputName) {
    int i;
    unsigned widthSoFar = 0;
    FIBITMAP* c = NULL, *bitmap = NULL;
