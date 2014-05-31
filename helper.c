@@ -26,12 +26,10 @@
 #include "FreeImage.h"
 #include "helper.h"
 
-/* this function is just playing around with FreeImage to see how to even
-   output an image with combined sprites */
-
 /* Do i really need to pass in FIBITMAP** canvas? I'm not even using it in main so wtf am i doing */
 
-/* bug: height for canvas is way too huge for all images, need to fix */
+/* bug: height for canvas is way too huge for all images, need to fix 
+   note: should be fixed, double check when home*/
 void make_packed_sprite(FIBITMAP** canvas, bmp_info* bmps, int numBmps, unsigned width, unsigned height, char* outputName) {
    int i;
    unsigned widthSoFar = 0, heightSoFar = 0, currentRowHeight = 0;
@@ -47,13 +45,10 @@ void make_packed_sprite(FIBITMAP** canvas, bmp_info* bmps, int numBmps, unsigned
 
    /* for easier referencing down the line */
    c = *canvas;
+   /* this is still dirty but eh*/
+   currentRowHeight = bmps[i].height;
 
    for(i = 0; i < numBmps; i++) {
-      /* this is dirty and I don't like it but eh */
-      if(i == 0) {
-         currentRowHeight = bmps[i].height;
-      }
-
       /* if width of current image goes over width, start new row */
       if( (widthSoFar + bmps[i].width) > width) {
          /* calculate new height for further pastes */
@@ -67,7 +62,7 @@ void make_packed_sprite(FIBITMAP** canvas, bmp_info* bmps, int numBmps, unsigned
             /* grab current canvas */
             temp = FreeImage_Copy(c, 0, 0, width, height);
             /* overwrite new height */
-            height = heightSoFar + height;
+            height = heightSoFar;
             /* allocate new canvas */
             newCanvas = FreeImage_Allocate(width, height, 32, 0, 0, 0);
          
@@ -79,6 +74,8 @@ void make_packed_sprite(FIBITMAP** canvas, bmp_info* bmps, int numBmps, unsigned
 
             /* free old canvas */
             FreeImage_Unload(c);
+            /* free temp canvas */
+            FreeImage_Unload(temp);
 
             /* update them pointers */
             c = newCanvas;
