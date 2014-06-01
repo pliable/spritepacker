@@ -62,7 +62,7 @@ void make_packed_sprite(FIBITMAP** canvas, bmp_info* bmps, int numBmps, unsigned
             /* grab current canvas */
             temp = FreeImage_Copy(c, 0, 0, width, height);
             /* overwrite new height */
-            height = heightSoFar;
+            height = heightSoFar + currentRowHeight;
             /* allocate new canvas */
             newCanvas = FreeImage_Allocate(width, height, 32, 0, 0, 0);
          

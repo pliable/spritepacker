@@ -61,7 +61,6 @@ int main(int argc, char *argv[]) {
    /*sort it. s-sort it reaaaaaal good */
    qsort(bmps, numFiles, sizeof(bmp_info), comp);
    calc_optimal_width_and_height(bmps, numFiles, &optimalWidth, &optimalHeight);
-   printf("optimal width: %d\n optimal height: %d\n", optimalWidth, optimalHeight);
    make_packed_sprite(&canvas, bmps, numFiles, optimalWidth, optimalHeight, argv[OUTPUTFILE]);
    /* make_horizontal_sprite(&canvas, bmps, numFiles, argv[OUTPUTFILE]);*/
 
