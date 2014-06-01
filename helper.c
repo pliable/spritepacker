@@ -46,7 +46,7 @@ void make_packed_sprite(FIBITMAP** canvas, bmp_info* bmps, int numBmps, unsigned
    /* for easier referencing down the line */
    c = *canvas;
    /* this is still dirty but eh*/
-   currentRowHeight = bmps[i].height;
+   currentRowHeight = bmps[0].height;
 
    for(i = 0; i < numBmps; i++) {
       /* if width of current image goes over width, start new row */
