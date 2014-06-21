@@ -209,10 +209,6 @@ int count_files(char* dirName) {
    }
 
    while ((currEntry = readdir(currDir)) != NULL) {
-      /* skipping self and parent */
-      if( (strcmp(currEntry->d_name, ".") == 0) || (strcmp(currEntry->d_name, "..") == 0)) {
-         continue;
-      }
 
       if (currEntry->d_type == DT_REG) { /* If the entry is a regular file */
          fileCount++;
@@ -237,11 +233,12 @@ void populate_bmp_info(bmp_info** outBmps, char* dirName, int fileCount) {
    int currBMPIdx = 0;
    bmp_info* bmps;
 
-   /* mallocing bmps array */
-   *outBmps = (bmp_info*)malloc(fileCount * sizeof(bmp_info));
+   /* callocing bmps array */
+   *outBmps = (bmp_info*)calloc(fileCount, sizeof(bmp_info));
+   /*outBmps = (bmp_info*)malloc(fileCount * sizeof(bmp_info)); */
 
    if(*outBmps == NULL) {
-      fprintf(stderr, "malloc fail, exiting...\n");
+      fprintf(stderr, "calloc fail, exiting...\n");
       exit(EXIT_FAILURE);
    }
 
@@ -258,12 +255,11 @@ void populate_bmp_info(bmp_info** outBmps, char* dirName, int fileCount) {
 
    /* modified from fsize from K&R, pg 182 */
    while((currEntry = readdir(currDir)) != NULL) {
-      /* skipping self and parent */
-      if( (strcmp(currEntry->d_name, ".") == 0) || (strcmp(currEntry->d_name, "..") == 0)) {
+      
+      if (!(currEntry->d_type == DT_REG()) { /* If the entry is a regular file */
          continue;
       }
-   
-
+      
       /* grab file name and get file type, exit if path is stupidly long */
       if(!(strlen(dirName) + strlen(currEntry->d_name) < FULLPATH)) {
          fprintf(stderr, "Path: %s%s too long, exiting...\n", dirName, currEntry->d_name);
@@ -272,6 +268,11 @@ void populate_bmp_info(bmp_info** outBmps, char* dirName, int fileCount) {
 
       strcat(fullPath, dirName);
       strcat(fullPath, currEntry->d_name);
+      
+      if(currBMPIdx > fileCount) {
+          /* something went wrong so bounce this popstinkle stand */
+          return;
+      }
 
       /* copy filename over to struct */
       strncpy(bmps[currBMPIdx].filename, fullPath, FULLPATH);
