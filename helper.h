@@ -1,4 +1,5 @@
 #include "magic.h"
+#include "FreeImage.h"
 typedef struct {
    char filename[FULLPATH];
    unsigned height;
