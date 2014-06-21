@@ -23,7 +23,6 @@
 #include <string.h>
 #include <sys/types.h>
 #include <math.h>
-#include "FreeImage.h"
 #include "helper.h"
 
 /* Do i really need to pass in FIBITMAP** canvas? I'm not even using it in main so wtf am i doing */
