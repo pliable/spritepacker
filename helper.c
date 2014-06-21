@@ -32,7 +32,7 @@
 void make_packed_sprite(FIBITMAP** canvas, bmp_info* bmps, int numBmps, unsigned width, unsigned height, char* outputName) {
    int i;
    unsigned widthSoFar = 0, heightSoFar = 0, currentRowHeight = 0;
-   FIBITMAP* c = NULL, *bitmap = NULL, *newCanvas = NULL, *temp = NULL;
+   FIBITMAP* c = NULL, *bitmap = NULL;
 
    /* allocate canvas */
    *canvas = FreeImage_Allocate(width, height, 32, 0, 0, 0);
@@ -59,6 +59,7 @@ void make_packed_sprite(FIBITMAP** canvas, bmp_info* bmps, int numBmps, unsigned
          /* if new image goes over height, copy old canvas, paste on allocated new one */
          if(heightSoFar + currentRowHeight > height) {
             /* grab current canvas */
+            FIBITMAP *temp = NULL, *newCanvas = NULL;
             temp = FreeImage_Copy(c, 0, 0, width, height);
             /* overwrite new height */
             height = heightSoFar + currentRowHeight;
@@ -255,7 +256,7 @@ void populate_bmp_info(bmp_info** outBmps, char* dirName, int fileCount) {
    /* modified from fsize from K&R, pg 182 */
    while((currEntry = readdir(currDir)) != NULL) {
       
-      if (!(currEntry->d_type == DT_REG()) { /* If the entry is a regular file */
+      if (!(currEntry->d_type == DT_REG)) { /* If the entry is a regular file */
          continue;
       }
       
@@ -270,7 +271,7 @@ void populate_bmp_info(bmp_info** outBmps, char* dirName, int fileCount) {
       
       if(currBMPIdx > fileCount) {
           /* something went wrong so bounce this popstinkle stand */
-          return;
+          break;
       }
 
       /* copy filename over to struct */
