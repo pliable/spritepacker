@@ -269,7 +269,7 @@ void populate_bmp_info(bmp_info** outBmps, char* dirName, int fileCount) {
       strcat(fullPath, dirName);
       strcat(fullPath, currEntry->d_name);
       
-      if(currBMPIdx > fileCount) {
+      if(currBMPIdx >= fileCount) {
           /* something went wrong so bounce this popstinkle stand */
           break;
       }
