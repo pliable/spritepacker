@@ -27,8 +27,7 @@
 
 /* Do i really need to pass in FIBITMAP** canvas? I'm not even using it in main so wtf am i doing */
 
-/* bug: height for canvas is way too huge for all images, need to fix 
-   note: should be fixed, double check when home*/
+/* really need to break this into smaller functions... */
 void make_packed_sprite(FIBITMAP** canvas, bmp_info* bmps, int numBmps, unsigned width, unsigned height, char* outputName) {
    int i;
    unsigned widthSoFar = 0, heightSoFar = 0, currentRowHeight = 0;
